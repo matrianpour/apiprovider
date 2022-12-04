@@ -1,0 +1,40 @@
+{
+    "name": "mtrn/apiservice",
+    "description": "api service: get api response and map it into any object of your choice.",
+    "license": "",
+    "authors": [
+        {
+            "name": "Zeynab Matrian",
+            "email": "zmatrianpour@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/mtrn/apiservice",
+    "keywords": ["Laravel", "ApiService", "ApiResponseMapper"],
+    "require": {
+        "illuminate/support": "~9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mtrn\\ApiService\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mtrn\\ApiService\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mtrn\\ApiService\\ApiServiceServiceProvider"
+            ],
+            "aliases": {
+                "ApiService": "Mtrn\\ApiService\\Facades\\ApiService"
+            }
+        }
+    }
+}
