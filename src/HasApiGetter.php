@@ -44,4 +44,13 @@ trait HasApiGetter
 
 
     /**
-     * @return Responsea
+     * @return Response
+     */
+    private function requestFromApi(): Response
+    {
+        $response = Http::get($this->configs['url']);
+        
+        return $response;
+    }
+
+}
