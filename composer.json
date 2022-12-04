@@ -11,7 +11,8 @@
     "homepage": "https://github.com/mtrn/apiservice",
     "keywords": ["Laravel", "ApiService", "ApiResponseMapper"],
     "require": {
-        "illuminate/support": "~9"
+        "illuminate/support": "~9",
+        "guzzlehttp/guzzle": "^7.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
