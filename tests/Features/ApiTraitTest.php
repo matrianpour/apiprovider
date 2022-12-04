@@ -22,4 +22,20 @@ class ApiTraitTest extends TestCase
         $this->assertInstanceOf('Illuminate\Http\Client\Response', $response);
         $this->assertSame(true,$response->successful());
     }
+
+
+    /**
+     * @test
+     */
+    public function api_name_has_been_set()
+    {
+        //arrange
+        $exampleModel = new ExampleModel();
+
+        //act
+        $apiName = $exampleModel->apiName;
+
+        //asseert 
+        $this->assertSame('examples',$apiName);
+    }
 }

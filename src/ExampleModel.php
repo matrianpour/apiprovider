@@ -10,4 +10,9 @@ class ExampleModel extends Model
 {
     use HasApiGetter;
 
+    public function getApiName(): string
+    {
+        return 'examples';
+    }
+
 }

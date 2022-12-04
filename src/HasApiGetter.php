@@ -3,17 +3,32 @@ namespace Mtrn\ApiService;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 trait HasApiGetter
 {
 
+    public string $apiName;
     private array $configs;
 
     public function __construct()
     {
+        $this->setApiName();
         $this->configure();
     }
 
+    /**
+     * @return string
+     */
+    abstract public function getApiName(): string;
+
+    /**
+     * @return void
+     */
+    private function setApiName()
+    {
+        $this->apiName = $this->getApiName();
+    }
 
     /**
      * 
@@ -24,9 +39,8 @@ trait HasApiGetter
     {
         $configs = config('apiservice.example');
 
-        $this->configs = $configs;
+        return $this->configs = $configs;
 
-        return $configs;
     }
 
      /**
