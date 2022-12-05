@@ -12,7 +12,7 @@ class ExampleModel extends Model
 
     public function getApiName(): string
     {
-        return 'examples';
+        return 'example';
     }
 
 }

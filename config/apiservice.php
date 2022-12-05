@@ -20,5 +20,17 @@ return [
 
     'example' => [
         'url' => 'https://reqres.in/api/users/3',
+        /*
+        |--------------------------------------------------------------------------
+        | API example
+        |--------------------------------------------------------------------------
+        |
+        | This value is used to access to the data you want extract from api.
+        | for example if the data is in response[data][user] 
+        | the data_access_key would be data.user
+        |
+        | default is data
+        */
+        'data_access_key' => 'data'
     ]
 ];
