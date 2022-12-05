@@ -3,11 +3,11 @@
 namespace Mtrn\ApiService;
 
 use Illuminate\Database\Eloquent\Model;
-use Mtrn\ApiService\HasApiGetter;
+use Mtrn\ApiService\IsApiClient;
 
 class ExampleModel extends Model
 {
-    use HasApiGetter;
+    use IsApiClient;
 
     /**
      * @return string

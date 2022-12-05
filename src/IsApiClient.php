@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-trait HasApiGetter
+trait IsApiClient
 {
 
     public string $apiName;
