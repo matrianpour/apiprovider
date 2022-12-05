@@ -15,7 +15,7 @@ class ApiTraitTest extends TestCase
     public function request_from_api()
     {
         //arrange
-        $apiTrait = new ExampleModel();
+        $apiTrait = new ExampleModel(); //exampleModel that use HasApiGetter
 
         //act
         $response = $apiTrait->request($map=false);
@@ -144,6 +144,36 @@ class ApiTraitTest extends TestCase
         $this->assertSame(['first_name' => 'john'], $extractedData);
     }
 
-    
+        /**
+     * @test
+     */
+    public function get_mapped_data_from_json_api_response()
+    {
+        //arange
+        $configs = [
+            'url' => 'https://reqres.in/api/users/3',
+            'response_type' => 'json',
+            'data_access_key' => ''
+        ];
+
+        config(['apiservice.example'=> $configs]);
+
+        $exampleModel = new ExampleModel();
+
+        // stub a json response for api
+        $responseArray = [
+            'first_name' => 'john',
+            'last_name' => 'doe'
+        ];
+        Http::fake([$configs['url'] => Http::response($responseArray, 200)]);
+        
+        //act
+        $mappedDataObject = $exampleModel->request($map=true);
+
+        //assert
+        $this->assertInstanceOf('Mtrn\ApiService\ExampleModel', $mappedDataObject);
+        $this->assertSame(['name' => 'john doe'], $mappedDataObject->getMappedArray());
+        
+    }
 
 }

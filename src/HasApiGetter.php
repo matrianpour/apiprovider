@@ -12,6 +12,7 @@ trait HasApiGetter
 
     public string $apiName;
     private array $configs;
+    private array $dataBody;
 
     public function __construct()
     {
@@ -23,6 +24,21 @@ trait HasApiGetter
      * @return string
      */
     abstract public function getApiName(): string;
+
+    /**
+     * map the api data
+     * 
+     * @param array $unmappedData
+     * @return object
+     */
+    abstract public function mapApiData(array $unmappedData): object;
+
+    /**
+     * convert the mapped data to an array.
+     * 
+     * @return array
+     */
+    abstract public function getMappedArray(): array;
 
     /**
      * @return void
@@ -47,7 +63,7 @@ trait HasApiGetter
      * @param boolean $mapData
      * @return Response
      */
-    public function request($map = true): Response
+    public function request($map = true): object
     {
         $response = $this->requestFromApi();
         $this->setData($response);
@@ -55,6 +71,7 @@ trait HasApiGetter
         if(!$map)
             return $response;
 
+        return $this->mapApiData($this->getData());
     }
 
 
