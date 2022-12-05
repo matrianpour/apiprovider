@@ -176,4 +176,21 @@ class ApiTraitTest extends TestCase
         
     }
 
+    // /**
+    //  * @test
+    //  */
+    // public function support_more_than_one_api_provider_for_single_mapper()
+    // {
+    //     //arrange
+    //     $exampleModel = new ExampleModel(); //exampleModel that use HasApiGetter
+
+    //     //act
+    //     // $response = $exampleModel->request('google', $map=false);
+    //     $response = $exampleModel->requestFromApi('google', $map=false);
+
+    //     //assert
+    //     $this->assertInstanceOf('Illuminate\Http\Client\Response', $response);
+    //     $this->assertSame(true,$response->successful());
+    // }
+
 }
