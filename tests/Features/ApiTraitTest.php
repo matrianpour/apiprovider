@@ -18,7 +18,7 @@ class ApiTraitTest extends TestCase
         $apiTrait = new ExampleModel(); //exampleModel that use HasApiGetter
 
         //act
-        $response = $apiTrait->request($map=false);
+        $response = $apiTrait->requestFromApi($map=false);
 
         //assert
         $this->assertInstanceOf('Illuminate\Http\Client\Response', $response);
@@ -69,7 +69,7 @@ class ApiTraitTest extends TestCase
         ]);
 
         //act
-        $exampleModel->request($map=false);
+        $exampleModel->requestFromApi($map=false);
         $extractedData = $exampleModel->getData();
 
         //assert
@@ -101,7 +101,7 @@ class ApiTraitTest extends TestCase
 
 
         //act
-        $exampleModel->request($map=false);
+        $exampleModel->requestFromApi($map=false);
         $extractedData = $exampleModel->getData();
 
         //assert
@@ -136,7 +136,7 @@ class ApiTraitTest extends TestCase
 
 
         //act
-        $exampleModel->request($map=false);
+        $exampleModel->requestFromApi($map=false);
         $extractedData = $exampleModel->getData();
 
         //assert
@@ -168,7 +168,7 @@ class ApiTraitTest extends TestCase
         Http::fake([$configs['url'] => Http::response($responseArray, 200)]);
         
         //act
-        $mappedDataObject = $exampleModel->request($map=true);
+        $mappedDataObject = $exampleModel->requestFromApi($map=true);
 
         //assert
         $this->assertInstanceOf('Mtrn\ApiService\ExampleModel', $mappedDataObject);

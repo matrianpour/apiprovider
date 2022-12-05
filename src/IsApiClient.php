@@ -84,9 +84,9 @@ trait IsApiClient
      * @param boolean $map
      * @return object
      */
-    public function request($map = true): object
+    public function requestFromApi($map = true): object
     {
-        $response = $this->requestFromApi();
+        $response = $this->requestFromProvider();
         $this->setData($response);
 
         if(!$map)
@@ -99,7 +99,7 @@ trait IsApiClient
     /**
      * @return Response
      */
-    private function requestFromApi(): Response
+    private function requestFromProvider(): Response
     {
         
         $response = Http::get($this->getConfig('url'));
