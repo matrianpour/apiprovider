@@ -55,7 +55,7 @@ class ApiTraitTest extends TestCase
             'data_access_key' => 'data.user'
         ];
 
-        config(['apiservice.example'=> $configs]);
+        config(['apiservice.apis.example'=> $configs]);
 
         $exampleModel = new ExampleModel();
 
@@ -90,7 +90,7 @@ class ApiTraitTest extends TestCase
             'data_access_key' => ''
         ];
 
-        config(['apiservice.example'=> $configs]);
+        config(['apiservice.apis.example'=> $configs]);
 
         $exampleModel = new ExampleModel();
 
@@ -123,7 +123,7 @@ class ApiTraitTest extends TestCase
             // 'data_access_key' => 'data'
         ];
 
-        config(['apiservice.example'=> $configs]);
+        config(['apiservice.apis.example'=> $configs]);
 
         $exampleModel = new ExampleModel();
 
@@ -156,7 +156,7 @@ class ApiTraitTest extends TestCase
             'data_access_key' => ''
         ];
 
-        config(['apiservice.example'=> $configs]);
+        config(['apiservice.apis.example'=> $configs]);
 
         $exampleModel = new ExampleModel();
 

@@ -17,7 +17,7 @@ trait HasApiGetter
     public function __construct()
     {
         $this->setApiName();
-        $this->configure();
+        $this->setConfigs();
     }
 
     /**
@@ -43,25 +43,35 @@ trait HasApiGetter
     /**
      * @return void
      */
-    private function setApiName()
+    private function setApiName(): void
     {
         $this->apiName = $this->getApiName();
     }
 
     /**
-     * @return array $config
+     * @return  void
      */
-    private function configure(): array
+    private function setConfigs():void
     {
-        $configs = config('apiservice.'.$this->getApiName());
+        $configs = config('apiservice.apis.'.$this->getApiName());
+        $configs['defaults'] = config('apiservice.defaults');
 
-        return $this->configs = $configs;
-
+        $this->configs = $configs;
     }
 
+    /**
+     * Get the specific value of config
+     * @return mixed
+     */
+    private function getConfig($key): mixed
+    {
+        return Arr::get($this->configs, $key);
+    }
+
+
      /**
-     * @param boolean $mapData
-     * @return Response
+     * @param boolean $map
+     * @return object
      */
     public function request($map = true): object
     {
@@ -80,19 +90,21 @@ trait HasApiGetter
      */
     private function requestFromApi(): Response
     {
-        $response = Http::get($this->configs['url']);
+        
+        $response = Http::get($this->getConfig('url'));
         
         return $response;
     }
 
         /**
      * @param Response $data
-     * @return array $dataBody
+     * @return void
      */
-    private function setData(Response $data):array
+    private function setData(Response $data): void
     {
-        
-        switch ($this->configs['response_type'] ?? 'json') {
+        $responseType = $this->getConfig('response_type') ?? $this->getConfig('defaults.response_type');
+
+        switch ($responseType) {
             case 'json':
                 $dataBody = $this->extraxtDataFromJson($data->body());
                 break;
@@ -104,7 +116,6 @@ trait HasApiGetter
         }
         
         $this->dataBody = $dataBody;
-        return $dataBody;
     }
 
     /**
@@ -130,8 +141,7 @@ trait HasApiGetter
             );
 
         $dataArray = json_decode($data, true);
-
-        $dataAccessKey = $this->configs['data_access_key'] ?? 'data';
+        $dataAccessKey = $this->getConfig('data_access_key') ?? $this->getConfig('defaults.data_access_key');
         if($dataAccessKey !== '')
             $dataArray = Arr::get($dataArray, $dataAccessKey);
 
