@@ -176,21 +176,36 @@ class ApiTraitTest extends TestCase
         
     }
 
-    // /**
-    //  * @test
-    //  */
-    // public function support_more_than_one_api_provider_for_single_mapper()
-    // {
-    //     //arrange
-    //     $exampleModel = new ExampleModel(); //exampleModel that use HasApiGetter
+    /**
+     * @test
+     * @return void
+     */
+    public function set_provider_for_trait()
+    {
+        //arrange
+        $configs = [
+            'url' => 'https://reqres.in/api/users/3',
+            'response_type' => 'json',
+            'data_access_key' => ''
+        ];
 
-    //     //act
-    //     // $response = $exampleModel->request('google', $map=false);
-    //     $response = $exampleModel->requestFromApi('google', $map=false);
+        config(['apiservice.apis.example'=> $configs]);
 
-    //     //assert
-    //     $this->assertInstanceOf('Illuminate\Http\Client\Response', $response);
-    //     $this->assertSame(true,$response->successful());
-    // }
+        $exampleModel = new ExampleModel();
+        
+
+        //act
+        $apiProviderOfExampleModel = $exampleModel->provider;
+        $providerName = $apiProviderOfExampleModel->getConfig('api_name');
+        $providerConfigs = $apiProviderOfExampleModel->getConfig();
+
+        //assert
+        $this->assertInstanceOf('Mtrn\ApiService\ApiProviders\ApiProvider', $apiProviderOfExampleModel);
+        $this->assertSame('example', $providerName);
+        foreach ($configs as $key => $value) {
+            $this->assertArrayHasKey($key, $providerConfigs);
+            $this->assertSame($value, $providerConfigs[$key]);
+        }
+    }
 
 }

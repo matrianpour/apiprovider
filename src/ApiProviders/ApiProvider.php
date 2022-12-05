@@ -1,6 +1,7 @@
 <?php 
 namespace Mtrn\ApiService\ApiProviders;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 abstract class ApiProvider
@@ -35,11 +36,14 @@ abstract class ApiProvider
     }
 
     /**
-     * @return array $configs
+     * @return mixed
      */
-    public function getConfig(): array
+    public function getConfig($key=null): mixed
     {
-        return $this->configs;
+        if( $key === null )
+            return $this->configs;
+        
+        return Arr::get($this->configs, $key);
     }
 
     /**

@@ -6,24 +6,21 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Mtrn\ApiService\ApiProviders\ApiProvider;
 
 trait IsApiClient
 {
-
     public string $apiName;
     private array $configs;
     private array $dataBody;
+    public ApiProvider $provider;
 
     public function __construct()
     {
         $this->setApiName();
         $this->setConfigs();
+        $this->setProvider();
     }
-
-    /**
-     * @return string
-     */
-    abstract public function getApiName(): string;
 
     /**
      * map the api data
@@ -39,6 +36,11 @@ trait IsApiClient
      * @return array
      */
     abstract public function getMappedArray(): array;
+
+    /**
+     * @return string
+     */
+    abstract public function getApiName(): string;
 
     /**
      * @return void
@@ -67,7 +69,16 @@ trait IsApiClient
     {
         return Arr::get($this->configs, $key);
     }
-
+    
+    /**
+     * @return void
+     */
+    public function setProvider(): void
+    {
+        $providerName = Str::studly($this->getApiName()).'ApiProvider';
+        $pathToProvider = "Mtrn\\ApiService\\ApiProviders\\".$providerName;
+        $this->provider = new $pathToProvider();
+    }
 
      /**
      * @param boolean $map
@@ -96,7 +107,7 @@ trait IsApiClient
         return $response;
     }
 
-        /**
+    /**
      * @param Response $data
      * @return void
      */
