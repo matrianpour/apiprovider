@@ -8,7 +8,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | APIGetter Defaults
+    | APIService Defaults
     |--------------------------------------------------------------------------
     |
     | This option controls the default values of the trait.
@@ -31,7 +31,7 @@ return [
     |
     */
     'apis' => [
-        'example' => [
+        'google' => [
             'url' => 'https://reqres.in/api/users/3',
 
             /*
@@ -49,7 +49,7 @@ return [
 
             /*
             |--------------------------------------------------------------------------
-            | API example
+            | data_access_key
             |--------------------------------------------------------------------------
             |
             | This value is used to access to the data you want to extract from api.

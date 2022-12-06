@@ -6,29 +6,42 @@ use Illuminate\Support\Str;
 
 abstract class ApiProvider
 {
-    public array $configs;
+    private array $configs;
     protected string $url;
-    // private string $apiName;
 
     public function __construct()
     {
-        // $this->setApiName();
         $this->setConfig();
-
     }
     
     /**
      * @return Response
      */
-    abstract public function requestFromProvider(): Response;
+    abstract public function requestFromApi(): Response;
+
+
+    /**
+     * @return Response
+     */
+    public function requestFromProvider(): Response
+    {
+        $response = $this->requestFromApi();
+        $this->setData($response);
+
+        return $response;
+    }
 
     /**
     * @return void
     */
-    public function setConfig(): void
+    private function setConfig(): void
     {
         $apiName = $this->getApiName();
+
         $configs = config('apiservice.apis.'.$apiName);
+        $defaults = config('apiservice.defaults');
+        $configs['response_type'] = $configs['response_type'] ?? ($defaults['response_type'] ?? 'json');
+        $configs['data_access_key'] = $configs['data_access_key'] ?? ($defaults['data_access_key'] ?? '');
         $configs['api_name'] = $apiName;
         $this->configs = $configs;
         $this->url = $configs['url'];
@@ -53,6 +66,60 @@ abstract class ApiProvider
         return Str::snake(Str::remove('ApiProvider', class_basename($this)));
     }
 
+
+    /**
+     * @param Response $data
+     * @return void
+     */
+    private function setData(Response $data): void
+    {
+        $responseType = $this->getConfig('response_type') ?? $this->getConfig('defaults.response_type');
+
+        switch ($responseType) {
+            case 'json':
+                $dataBody = $this->extraxtDataFromJson($data->body());
+                break;
+            
+            // case 'xml':
+            //     $dataBody = $this->extraxtDataFromXml($data->body());
+            //     break;
+
+        }
+
+        $this->dataBody = $dataBody;
+    }
+
+    /**
+     * return the data of response
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->dataBody;
+    }
+
+        
+    /**
+     * @param string $data
+     * @return array $dataArray
+     */
+    private function extraxtDataFromJson($data): array
+    {
+        if(!Str::of($data)->isJson())
+            throw new \Exception(
+                __METHOD__.
+                ': Resoonse data type is expected to be json '
+               . gettype($data).' is given.'
+            );
+
+        $dataArray = json_decode($data, true);
+    
+        $dataAccessKey = $this->getConfig('data_access_key') ?? $this->getConfig('defaults.data_access_key');
+        if($dataAccessKey !== '')
+            $dataArray = Arr::get($dataArray, $dataAccessKey);
+
+        return $dataArray;
+    }
  
 
 }

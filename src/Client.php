@@ -5,7 +5,7 @@ namespace Mtrn\ApiService;
 use Illuminate\Database\Eloquent\Model;
 use Mtrn\ApiService\IsApiClient;
 
-class ExampleClient extends Model
+class Client extends Model
 {
     use IsApiClient;
     

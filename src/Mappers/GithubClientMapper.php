@@ -1,19 +1,16 @@
 <?php 
 namespace Mtrn\ApiService\Mappers;
-class OtherExampleClientMapper
-{
-    public function __construct($client)
-    {
-        $this->client = $client;
-    }
 
+use Mtrn\ApiService\Client;
+
+class GithubClientMapper extends Mapper
+{
     /**
      * @param array $data
-     * @return object
+     * @return Client
      */
-    public function mapApiData(array $data): object
+    public function mapApiData(array $data): Client
     {
-        //an instaance of ether-api-data for user
         // ['forename' => 'sergey', 'surname' => 'lazarev']
         $this->client->setAttribute('name', $data['forename'].' '.$data['surname']);
         return $this->client;
