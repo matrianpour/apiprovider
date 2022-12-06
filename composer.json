@@ -8,7 +8,7 @@
             "email": "zmatrianpour@gmail.com"
         }
     ],
-    "homepage": "https://github.com/mtrn/apiservice",
+    "homepage": "https://github.com/matrianpour/apiprovider",
     "keywords": ["Laravel", "ApiService", "ApiResponseMapper"],
     "require": {
         "illuminate/support": "~9",
