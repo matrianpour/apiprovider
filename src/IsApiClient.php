@@ -4,6 +4,7 @@ namespace Mtrn\ApiService;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mtrn\ApiService\ApiProviders\ApiProvider;
@@ -14,13 +15,6 @@ trait IsApiClient
     private array $configs;
     private array $dataBody;
     public ApiProvider $provider;
-
-    public function __construct()
-    {
-        $this->setApiName();
-        $this->setConfigs();
-        $this->setProvider();
-    }
 
     /**
      * map the api data
@@ -37,17 +31,21 @@ trait IsApiClient
      */
     abstract public function getMappedArray(): array;
 
-    /**
-     * @return string
-     */
-    abstract public function getApiName(): string;
 
     /**
      * @return void
      */
-    private function setApiName(): void
+    private function setApiName($apiName): void
     {
-        $this->apiName = $this->getApiName();
+        $this->apiName = $apiName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiName(): string
+    {
+        return $this->apiName;
     }
 
     /**
@@ -55,9 +53,9 @@ trait IsApiClient
      */
     private function setConfigs():void
     {
+        
         $configs = config('apiservice.apis.'.$this->getApiName());
         $configs['defaults'] = config('apiservice.defaults');
-
         $this->configs = $configs;
     }
 
@@ -73,38 +71,39 @@ trait IsApiClient
     /**
      * @return void
      */
-    public function setProvider(): void
+    public function setProvider($apiName): void
     {
-        $providerName = Str::studly($this->getApiName()).'ApiProvider';
-        $pathToProvider = "Mtrn\\ApiService\\ApiProviders\\".$providerName;
-        $this->provider = new $pathToProvider();
+        $this->setApiName($apiName);
+        $this->setConfigs();
+        $provider = App::make(ApiProvider::class, ['apiName' => $apiName]);
+        $this->provider = $provider;
     }
 
-     /**
-     * @param boolean $map
-     * @return object
+    /**
+     * @return ApiProvider
      */
-    public function requestFromApi($map = true): object
+    public function getProvider(): ApiProvider
     {
-        $response = $this->requestFromProvider();
+        return $this->provider;
+    }
+
+
+    /**
+    * @param string $apiName
+    * @param boolean $map
+    * @return object
+    */
+    public function requestFromApi($apiName, $map = true): object
+    {
+        
+        $this->setProvider($apiName);
+        $response = $this->getProvider()->requestFromProvider();
         $this->setData($response);
 
         if(!$map)
             return $response;
 
         return $this->mapApiData($this->getData());
-    }
-
-
-    /**
-     * @return Response
-     */
-    private function requestFromProvider(): Response
-    {
-        
-        $response = Http::get($this->getConfig('url'));
-        
-        return $response;
     }
 
     /**
@@ -125,7 +124,7 @@ trait IsApiClient
             //     break;
 
         }
-        
+
         $this->dataBody = $dataBody;
     }
 
@@ -152,6 +151,7 @@ trait IsApiClient
             );
 
         $dataArray = json_decode($data, true);
+
         $dataAccessKey = $this->getConfig('data_access_key') ?? $this->getConfig('defaults.data_access_key');
         if($dataAccessKey !== '')
             $dataArray = Arr::get($dataArray, $dataAccessKey);

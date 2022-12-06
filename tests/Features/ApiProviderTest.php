@@ -4,6 +4,8 @@ namespace Mtrn\ApiService\Tests\Features;
 use Mtrn\ApiService\ApiProviders\ExampleApiProvider;
 use Mtrn\ApiService\Tests\TestCase;
 use Mtrn\ApiService\ApiProviders\ApiProvider;
+use Mtrn\ApiService\ApiProviders\OtherApiProvider;
+use Mtrn\ApiService\ExampleModel;
 
 class ApiProviderTest extends TestCase
 {
@@ -16,7 +18,7 @@ class ApiProviderTest extends TestCase
         $exampleProvider = new ExampleApiProvider();
         
         //act
-        $response = $exampleProvider->requestToApi();
+        $response = $exampleProvider->requestFromProvider();
 
         //assert
         $this->assertSame('example', $exampleProvider->configs['api_name']);

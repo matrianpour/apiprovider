@@ -20,15 +20,14 @@ abstract class ApiProvider
     /**
      * @return Response
      */
-    abstract public function requestToApi(): Response;
+    abstract public function requestFromProvider(): Response;
 
     /**
     * @return void
     */
-    public function setConfig()
+    public function setConfig(): void
     {
-
-        $apiName = Str::snake(Str::remove('ApiProvider', class_basename($this)));
+        $apiName = $this->getApiName();
         $configs = config('apiservice.apis.'.$apiName);
         $configs['api_name'] = $apiName;
         $this->configs = $configs;
@@ -47,12 +46,12 @@ abstract class ApiProvider
     }
 
     /**
-     * @return void
+     * @return string
      */
-    // public function setApiName(): void
-    // {
-    //     $this->apiName = Str::snake(Str::remove('ApiProvider', class_basename($this)));
-    // }
+    private function getApiName(): string
+    {
+        return Str::snake(Str::remove('ApiProvider', class_basename($this)));
+    }
 
  
 

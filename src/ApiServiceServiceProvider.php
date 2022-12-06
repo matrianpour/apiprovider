@@ -3,6 +3,8 @@
 namespace Mtrn\ApiService;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Mtrn\ApiService\ApiProviders\ApiProvider;
 
 class ApiServiceServiceProvider extends ServiceProvider
 {
@@ -13,11 +15,6 @@ class ApiServiceServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'mtrn');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'mtrn');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
@@ -37,6 +34,14 @@ class ApiServiceServiceProvider extends ServiceProvider
         $this->app->singleton('apiservice', function ($app) {
             return new ApiService;
         });
+        
+        $this->app->bind(ApiProvider::class, function ($app, $params) {
+            $apiName =$params['apiName'];
+            $providerName = Str::studly($apiName).'ApiProvider';
+            $pathToProvider = "Mtrn\\ApiService\\ApiProviders\\".$providerName;
+            return $app->make($pathToProvider);
+        });
+
     }
 
     /**
@@ -60,23 +65,5 @@ class ApiServiceServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/apiservice.php' => config_path('apiservice.php'),
         ], 'apiservice.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/mtrn'),
-        ], 'apiservice.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/mtrn'),
-        ], 'apiservice.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/mtrn'),
-        ], 'apiservice.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
     }
 }

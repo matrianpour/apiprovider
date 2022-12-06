@@ -12,10 +12,10 @@ class ExampleModel extends Model
     /**
      * @return string
      */
-    public function getApiName(): string
-    {
-        return 'example';
-    }
+    // public function getApiName(): string
+    // {
+    //     return 'example';
+    // }
 
     /**
      * map the api data
