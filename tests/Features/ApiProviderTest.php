@@ -1,7 +1,7 @@
 <?php 
 namespace Mtrn\ApiService\Tests\Features;
 
-use Mtrn\ApiService\ApiProviders\GoogleApiProvider;
+use Mtrn\ApiService\Services\ApiService\ApiProviders\GoogleApiProvider;
 use Mtrn\ApiService\Tests\TestCase;
 
 class ApiProviderTest extends TestCase

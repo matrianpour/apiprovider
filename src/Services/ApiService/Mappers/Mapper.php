@@ -1,7 +1,7 @@
 <?php 
-namespace Mtrn\ApiService\Mappers;
+namespace Mtrn\ApiService\Services\ApiService\Mappers;
 
-use Mtrn\ApiService\IsApiClient AS client;
+use Mtrn\ApiService\Traits\IsApiClient AS client;
 
 abstract class Mapper
 {

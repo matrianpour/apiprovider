@@ -1,9 +1,9 @@
 <?php
 
-namespace Mtrn\ApiService;
+namespace Mtrn\ApiService\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Mtrn\ApiService\IsApiClient;
+use Mtrn\ApiService\Traits\IsApiClient ;
 
 class Client extends Model
 {

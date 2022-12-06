@@ -1,10 +1,11 @@
 <?php 
-namespace Mtrn\ApiService;
+namespace Mtrn\ApiService\Traits;
 
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-use Mtrn\ApiService\Mappers\Mapper;
+use Mtrn\ApiService\Services\ApiService\Mappers\Mapper;
 
 trait IsApiClient
 {
@@ -94,12 +95,8 @@ trait IsApiClient
      */
     private function setMapper(string $apiName)
     {
-        //strategy pattern to choose proper mapper based on client and provider
-        $clientName = class_basename($this);
-        $mapperName = Str::studly($apiName).$clientName.'Mapper';
-        $pathToMapper = "Mtrn\\ApiService\\Mappers\\".$mapperName;
-
-        $this->mapper = new $pathToMapper($this);
+        $mapper = App::make(Mapper::class, ['apiName' => $apiName, 'client' => $this]);
+        $this->mapper = $mapper;
     }
 
     /**

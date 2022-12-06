@@ -1,8 +1,8 @@
 <?php 
-namespace Mtrn\ApiService;
+namespace Mtrn\ApiService\Traits;
 
 use Illuminate\Support\Facades\App;
-use Mtrn\ApiService\ApiProviders\ApiProvider;
+use Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider;
 
 trait HasApiProvider
 {

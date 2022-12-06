@@ -3,7 +3,7 @@ namespace Mtrn\ApiService\Tests\Features;
 
 use Illuminate\Support\Facades\Http;
 use Mtrn\ApiService\Tests\TestCase;
-use Mtrn\ApiService\Client;
+use Mtrn\ApiService\Models\Client;
 
 class ApiTraitTest extends TestCase
 {
@@ -154,7 +154,7 @@ class ApiTraitTest extends TestCase
         $mappedDataObject = $client->requestFromApi($amiName='google', $map=true);
 
         //assert
-        $this->assertInstanceOf('Mtrn\ApiService\Client', $mappedDataObject);
+        $this->assertInstanceOf('Mtrn\ApiService\Models\Client', $mappedDataObject);
         $this->assertSame(['name' => 'john doe'], $mappedDataObject->getMappedArray());
         
     }
@@ -190,7 +190,7 @@ class ApiTraitTest extends TestCase
         $providerConfigs = $apiProviderOfClient->getConfig();
 
         //assert
-        $this->assertInstanceOf('Mtrn\ApiService\ApiProviders\ApiProvider', $apiProviderOfClient);
+        $this->assertInstanceOf('Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider', $apiProviderOfClient);
         $this->assertSame('google', $providerName);
         foreach ($configs as $key => $value) {
             $this->assertArrayHasKey($key, $providerConfigs);
@@ -295,9 +295,9 @@ class ApiTraitTest extends TestCase
         
 
         //assert
-        $this->assertInstanceOf('Mtrn\ApiService\Client', $googleApiMappedData);
+        $this->assertInstanceOf('Mtrn\ApiService\Models\Client', $googleApiMappedData);
         $this->assertSame(['name' => 'john doe'], $googleMappedData);
-        $this->assertInstanceOf('Mtrn\ApiService\Client', $githubApiMappedData);
+        $this->assertInstanceOf('Mtrn\ApiService\Models\Client', $githubApiMappedData);
         $this->assertSame(['name' => 'sergey lazarev'], $githubMappedData);
 
     }

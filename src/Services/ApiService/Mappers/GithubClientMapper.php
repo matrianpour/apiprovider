@@ -1,7 +1,7 @@
 <?php 
-namespace Mtrn\ApiService\Mappers;
+namespace Mtrn\ApiService\Services\ApiService\Mappers;
 
-use Mtrn\ApiService\Client;
+use Mtrn\ApiService\Models\Client;
 
 class GithubClientMapper extends Mapper
 {

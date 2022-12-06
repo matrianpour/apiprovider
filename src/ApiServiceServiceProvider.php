@@ -4,7 +4,8 @@ namespace Mtrn\ApiService;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Mtrn\ApiService\ApiProviders\ApiProvider;
+use Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider;
+use Mtrn\ApiService\Services\ApiService\Mappers\Mapper;
 
 class ApiServiceServiceProvider extends ServiceProvider
 {
@@ -36,10 +37,21 @@ class ApiServiceServiceProvider extends ServiceProvider
         });
         
         $this->app->bind(ApiProvider::class, function ($app, $params) {
-            $apiName =$params['apiName'];
+            $apiName = $params['apiName'];
             $providerName = Str::studly($apiName).'ApiProvider';
-            $pathToProvider = "Mtrn\\ApiService\\ApiProviders\\".$providerName;
+            $pathToProvider = "Mtrn\\ApiService\\Services\\ApiService\\ApiProviders\\".$providerName;
             return $app->make($pathToProvider);
+        });
+
+
+        $this->app->bind(Mapper::class, function ($app, $params) {
+            
+            $apiName = $params['apiName'];
+            $client = $params['client'];
+            $clientName = class_basename($client);
+            $mapperName = Str::studly($apiName).$clientName.'Mapper';
+            $pathToMapper = "Mtrn\\ApiService\\Services\\ApiService\\Mappers\\".$mapperName;
+            return  new $pathToMapper($client);
         });
 
     }
@@ -61,6 +73,11 @@ class ApiServiceServiceProvider extends ServiceProvider
      */
     protected function bootForConsole(): void
     {
+        // Publishing the configuration file.
+        $this->publishes([
+            __DIR__.'/../config/apiservice.php' => config_path('apiservice.php'),
+        ], 'apiservice.config');
+
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/apiservice.php' => config_path('apiservice.php'),
