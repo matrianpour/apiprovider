@@ -5,7 +5,6 @@ namespace Mtrn\ApiService;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mtrn\ApiService\ApiProviders\ApiProvider;
 
@@ -103,7 +102,7 @@ trait IsApiClient
         if(!$map)
             return $response;
 
-        return $this->mapApiData($this->getData());
+        return $this->mapApiDataProvidedBy($apiName, $this->getData());
     }
 
     /**
@@ -159,4 +158,19 @@ trait IsApiClient
         return $dataArray;
     }
 
+    /**
+     * @param string $apiName
+     * @param array $data
+     * @return object
+     */
+    public function mapApiDataProvidedBy(string $apiName, array $data): object
+    {
+        //strategy pattern to choose proper mapper based on client and provider
+        $clientName = class_basename($this);
+        $mapperName = Str::studly($apiName).$clientName.'Mapper';
+        $pathToMapper = "Mtrn\\ApiService\\Mappers\\".$mapperName;
+
+        $mapper = new $pathToMapper($this);
+        return $mapper->mapApiData($data);
+    }
 }

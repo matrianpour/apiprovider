@@ -5,18 +5,10 @@ namespace Mtrn\ApiService;
 use Illuminate\Database\Eloquent\Model;
 use Mtrn\ApiService\IsApiClient;
 
-class ExampleModel extends Model
+class ExampleClient extends Model
 {
     use IsApiClient;
-
-    /**
-     * @return string
-     */
-    // public function getApiName(): string
-    // {
-    //     return 'example';
-    // }
-
+    
     /**
      * map the api data
      * 

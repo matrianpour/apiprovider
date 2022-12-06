@@ -3,7 +3,7 @@ namespace Mtrn\ApiService\Tests\Features;
 
 use Illuminate\Support\Facades\Http;
 use Mtrn\ApiService\Tests\TestCase;
-use Mtrn\ApiService\ExampleModel;
+use Mtrn\ApiService\ExampleClient;
 
 class ApiTraitTest extends TestCase
 {
@@ -15,7 +15,7 @@ class ApiTraitTest extends TestCase
     public function request_from_api()
     {
         //arrange
-        $apiTrait = new ExampleModel(); //exampleModel that use HasApiGetter
+        $apiTrait = new ExampleClient(); //exampleclient that use HasApiGetter
 
         //act
         $response = $apiTrait->requestFromApi($apiName = 'example',$map=false);
@@ -40,7 +40,7 @@ class ApiTraitTest extends TestCase
 
         config(['apiservice.apis.example'=> $configs]);
 
-        $exampleModel = new ExampleModel();
+        $exampleclient = new ExampleClient();
 
         // stub a json response for api
         Http::fake([
@@ -52,8 +52,8 @@ class ApiTraitTest extends TestCase
         ]);
 
         //act
-        $exampleModel->requestFromApi($amiName='example', $map=false);
-        $extractedData = $exampleModel->getData();
+        $exampleclient->requestFromApi($amiName='example', $map=false);
+        $extractedData = $exampleclient->getData();
 
         //assert
         $this->assertSame(['first_name' => 'john'], $extractedData);
@@ -75,7 +75,7 @@ class ApiTraitTest extends TestCase
 
         config(['apiservice.apis.example'=> $configs]);
 
-        $exampleModel = new ExampleModel();
+        $exampleclient = new ExampleClient();
 
         // stub a json response for api
         Http::fake([
@@ -84,8 +84,8 @@ class ApiTraitTest extends TestCase
 
 
         //act
-        $exampleModel->requestFromApi($amiName='example', $map=false);
-        $extractedData = $exampleModel->getData();
+        $exampleclient->requestFromApi($amiName='example', $map=false);
+        $extractedData = $exampleclient->getData();
 
         //assert
         $this->assertIsArray($extractedData);
@@ -108,7 +108,7 @@ class ApiTraitTest extends TestCase
 
         config(['apiservice.apis.example'=> $configs]);
 
-        $exampleModel = new ExampleModel();
+        $exampleclient = new ExampleClient();
 
         // stub a json response for api
         Http::fake([
@@ -119,8 +119,8 @@ class ApiTraitTest extends TestCase
 
 
         //act
-        $exampleModel->requestFromApi($amiName='example', $map=false);
-        $extractedData = $exampleModel->getData();
+        $exampleclient->requestFromApi($amiName='example', $map=false);
+        $extractedData = $exampleclient->getData();
 
         //assert
         $this->assertIsArray($extractedData);
@@ -141,7 +141,7 @@ class ApiTraitTest extends TestCase
 
         config(['apiservice.apis.example'=> $configs]);
 
-        $exampleModel = new ExampleModel();
+        $exampleclient = new ExampleClient();
 
         // stub a json response for api
         $responseArray = [
@@ -151,10 +151,10 @@ class ApiTraitTest extends TestCase
         Http::fake([$configs['url'] => Http::response($responseArray, 200)]);
         
         //act
-        $mappedDataObject = $exampleModel->requestFromApi($amiName='example', $map=true);
+        $mappedDataObject = $exampleclient->requestFromApi($amiName='example', $map=true);
 
         //assert
-        $this->assertInstanceOf('Mtrn\ApiService\ExampleModel', $mappedDataObject);
+        $this->assertInstanceOf('Mtrn\ApiService\exampleclient', $mappedDataObject);
         $this->assertSame(['name' => 'john doe'], $mappedDataObject->getMappedArray());
         
     }
@@ -174,18 +174,18 @@ class ApiTraitTest extends TestCase
 
         config(['apiservice.apis.example'=> $configs]);
 
-        $exampleModel = new ExampleModel();
-        $exampleModel->requestFromApi($apiName='example', $map=false);
+        $exampleclient = new ExampleClient();
+        $exampleclient->requestFromApi($apiName='example', $map=false);
 
         
 
         //act
-        $apiProviderOfExampleModel = $exampleModel->getProvider();
-        $providerName = $apiProviderOfExampleModel->getConfig('api_name');
-        $providerConfigs = $apiProviderOfExampleModel->getConfig();
+        $apiProviderOfexampleclient = $exampleclient->getProvider();
+        $providerName = $apiProviderOfexampleclient->getConfig('api_name');
+        $providerConfigs = $apiProviderOfexampleclient->getConfig();
 
         //assert
-        $this->assertInstanceOf('Mtrn\ApiService\ApiProviders\ApiProvider', $apiProviderOfExampleModel);
+        $this->assertInstanceOf('Mtrn\ApiService\ApiProviders\ApiProvider', $apiProviderOfexampleclient);
         $this->assertSame('example', $providerName);
         foreach ($configs as $key => $value) {
             $this->assertArrayHasKey($key, $providerConfigs);
@@ -215,7 +215,7 @@ class ApiTraitTest extends TestCase
         config(['apiservice.apis.example'=> $configsForExampleApi]);
         config(['apiservice.apis.other'=> $configsForOtherApi]);
 
-        $apiClientObject = new ExampleModel();
+        $apiClientObject = new ExampleClient();
 
         $exampleExpectedData = ['first_name' => 'john'];
         $otherExpectedData = ['surname' => 'sergey'];
@@ -244,6 +244,56 @@ class ApiTraitTest extends TestCase
         $this->assertSame($exampleExpectedData, $exampleApiData);
         $this->assertTrue($otherApiResponse->successful());
         $this->assertSame($otherExpectedData, $otherApiData);
+
+    }
+
+    /**
+     * @test
+     */
+    public function support_diffrent_mappers_for_a_client()
+    {
+        //arrange
+        $configsForExampleApi = [
+            'url' => 'https://example-api/users/',
+            'response_type' => 'json',
+            'data_access_key' => 'data'
+        ];
+
+        $configsForOtherApi = [
+            'url' => 'https://other-api/users/',
+            'response_type' => 'json',
+            'data_access_key' => ''
+        ];
+
+        config(['apiservice.apis.example'=> $configsForExampleApi]);
+        config(['apiservice.apis.other'=> $configsForOtherApi]);
+
+        $apiClientObject = new ExampleClient();
+        
+        Http::fake([
+            // stub a json response for example api
+            $configsForExampleApi['url'] => Http::response([
+                'data' => ['first_name' => 'john', 'last_name' => 'doe']
+            ], 200),
+
+            // stub a json response for other api
+            $configsForOtherApi['url'] => Http::response([
+                'forename' => 'sergey', 'surname' => 'lazarev'
+            ], 200),
+        ]);
+
+        //act
+        $exampleApiMappedData = $apiClientObject->requestFromApi($apiName='example', $map=true);
+        $examplemappedData = $exampleApiMappedData->getMappedArray();
+        $otherApiMappedData = $apiClientObject->requestFromApi($apiName='other', $map=true);
+        $otherMappedData = $otherApiMappedData->getMappedArray();
+        
+
+        //assert
+        $this->assertInstanceOf('Mtrn\ApiService\exampleclient', $exampleApiMappedData);
+        $this->assertSame(['name' => 'john doe'], $examplemappedData);
+        $this->assertInstanceOf('Mtrn\ApiService\exampleclient', $otherApiMappedData);
+        $this->assertSame(['name' => 'sergey lazarev'], $otherMappedData);
 
     }
 

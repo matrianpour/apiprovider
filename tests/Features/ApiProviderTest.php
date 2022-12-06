@@ -5,7 +5,7 @@ use Mtrn\ApiService\ApiProviders\ExampleApiProvider;
 use Mtrn\ApiService\Tests\TestCase;
 use Mtrn\ApiService\ApiProviders\ApiProvider;
 use Mtrn\ApiService\ApiProviders\OtherApiProvider;
-use Mtrn\ApiService\ExampleModel;
+use Mtrn\ApiService\ExampleClient;
 
 class ApiProviderTest extends TestCase
 {
