@@ -76,6 +76,14 @@ trait IsApiClient
     }
 
     /**
+     * @return string
+     */
+    public function getClientName(): string
+    {
+        return Str::snake(class_basename($this));
+    }
+
+    /**
     * @param string $apiName
     * @param boolean $map
     * @return object

@@ -15,7 +15,7 @@ class ApiTraitTest extends TestCase
     public function request_from_api()
     {
         //arrange
-        $client = new Client(); //Client that use HasApiGetter
+        $client = new Client(); //Client that use IsClientApi
 
         //act
         $response = $client->requestFromApi($apiName = 'google',$map=false);
@@ -25,80 +25,13 @@ class ApiTraitTest extends TestCase
         $this->assertSame(true,$response->successful());
     }
 
-    /**
-     * 
-     * @test
-     * @return void
-     */
-    public function consider_default_api_response_type_as_json()
-    {
-        //arrange
-        $configs = [
-            'url' => 'https://google.com/api/users/3',
-            // 'response_type' => 'json',
-            'data_access_key' => ''
-        ];
-
-        config(['apiservice.apis.google'=> $configs]);
-
-        $client = new Client();
-
-        // stub a json response for api
-        Http::fake([
-            $configs['url'] => Http::response(['first_name' => 'john'], 200)
-        ]);
-
-
-        //act
-        $client->requestFromApi($amiName='google', $map=false);
-        $extractedData = $client->getApiBody();
-
-        //assert
-        $this->assertIsArray($extractedData);
-        $this->assertSame(['first_name' => 'john'], $extractedData);
-    }
-
-    /**
-     * 
-     * @test
-     * @return void
-     */
-    public function consider_default_api_data_access_key_as_data()
-    {
-        //arrange
-        $configs = [
-            'url' => 'https://google.com/api/users/3',
-            'response_type' => 'json',
-            // 'data_access_key' => 'data'
-        ];
-
-        config(['apiservice.apis.google'=> $configs]);
-
-        $client = new Client();
-
-        // stub a json response for api
-        Http::fake([
-            $configs['url'] => Http::response([
-                'data' => ['first_name' => 'john']
-            ], 200)
-        ]);
-
-
-        //act
-        $client->requestFromApi($amiName='google', $map=false);
-        $extractedData = $client->getApiBody();
-
-        //assert
-        $this->assertIsArray($extractedData);
-        $this->assertSame(['first_name' => 'john'], $extractedData);
-    }
 
         /**
      * @test
      */
-    public function get_mapped_data_from_json_api_response()
+    public function execute_strategy_to_choose_decorator():void
     {
-        //arange
+        //arrange
         $configs = [
             'url' => 'https://google.com/api/users/3',
             'response_type' => 'json',
@@ -108,98 +41,43 @@ class ApiTraitTest extends TestCase
         config(['apiservice.apis.google'=> $configs]);
 
         $client = new Client();
-
-        // stub a json response for api
-        $responseArray = [
-            'first_name' => 'john',
-            'last_name' => 'doe'
-        ];
-        Http::fake([$configs['url'] => Http::response($responseArray, 200)]);
-        
-        //act
-        $mappedDataObject = $client->requestFromApi($amiName='google', $map=true);
-
-        //assert
-        $this->assertInstanceOf('Mtrn\ApiService\Models\Client', $mappedDataObject);
-        $this->assertSame(['name' => 'john doe'], $mappedDataObject->getMappedArray());
-        
-    }
-
-    /**
-     * @test
-     */
-    public function support_diffrent_api_providers()
-    {
-        //arrange
-        $configsForGoogleApi = [
-            'url' => 'https://google.com/api/users/',
-            'response_type' => 'json',
-            'data_access_key' => 'data'
-        ];
-
-        $configsForGithubApi = [
-            'url' => 'https://github/api/users/',
-            'response_type' => 'json',
-            'data_access_key' => ''
-        ];
-
-        config(['apiservice.apis.google'=> $configsForGoogleApi]);
-        config(['apiservice.apis.github'=> $configsForGithubApi]);
-
-        $apiClientObject = new Client();
-
-        $googleExpectedData = ['first_name' => 'john'];
-        $githubExpectedData = ['surname' => 'sergey'];
         
         Http::fake([
             // stub a json response for google api
-            $configsForGoogleApi['url'] => Http::response([
-                'data' => $googleExpectedData
-            ], 200),
-
-            // stub a json response for other api
-            $configsForGithubApi['url'] => Http::response($githubExpectedData, 200),
+            $configs['url'] => Http::response(['first_name' => 'john'], 200),
 
         ]);
 
-        //act
-        //parameter $apiName  passed to requestFromApi is newly added parametr which is used to set api rovider.
-        $googleApiResponse = $apiClientObject->requestFromApi($apiName='google', $map=false);
-        $googleApiData = $apiClientObject->getApiBody();
-        $gitHubApiResponse = $apiClientObject->requestFromApi($apiName='github', $map=false);
-        $githubApiData = $apiClientObject->getApiBody();
-        
+        $client->requestFromApi('google', false);
+        $decorator = $client->getDecorator();
 
-        //assert
-        $this->assertTrue($googleApiResponse->successful());
-        $this->assertSame($googleExpectedData, $googleApiData);
-        $this->assertTrue($gitHubApiResponse->successful());
-        $this->assertSame($githubExpectedData, $githubApiData);
-
+        $this->assertInstanceOf(config('apiservice.path_to_decorators').'Decorator', $decorator);
+        $this->assertSame('GoogleClientDecorator', class_basename($decorator));
     }
+
 
     /**
      * @test
      */
-    public function support_diffrent_mappers_for_a_client()
+    public function support_diffrent_decoration_for_a_client()
     {
         //arrange
         $configsForGoogleApi = [
             'url' => 'https://google.com/api/users/',
             'response_type' => 'json',
-            'data_access_key' => 'data'
+            'data_access_keys' => ['client'=>'data']
         ];
 
         $configsForGithubApi = [
             'url' => 'https://github/api/users/',
             'response_type' => 'json',
-            'data_access_key' => ''
+            'data_access_keys' => ['client'=>'']
         ];
 
         config(['apiservice.apis.google'=> $configsForGoogleApi]);
         config(['apiservice.apis.github'=> $configsForGithubApi]);
 
-        $apiClientObject = new Client();
+        $client = new Client();
         
         Http::fake([
             // stub a json response for google api
@@ -214,9 +92,9 @@ class ApiTraitTest extends TestCase
         ]);
 
         //act
-        $googleApiMappedData = $apiClientObject->requestFromApi($apiName='google', $map=true);
+        $googleApiMappedData = $client->requestFromApi($apiName='google', $map=true); // get use of GoogleClientDecorator
         $googleMappedData = $googleApiMappedData->getMappedArray();
-        $githubApiMappedData = $apiClientObject->requestFromApi($apiName='github', $map=true);
+        $githubApiMappedData = $client->requestFromApi($apiName='github', $map=true); // get use of GithubClientDecorator
         $githubMappedData = $githubApiMappedData->getMappedArray();
         
 

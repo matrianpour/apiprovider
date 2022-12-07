@@ -11,13 +11,12 @@ return [
     | APIService Defaults
     |--------------------------------------------------------------------------
     |
-    | This option controls the default values of the trait.
+    | This option controls the default values.
     | You may change them as you want.
     |
     */
     'defaults' => [
         'response_type' => 'json', //currently supported types are [json]
-        'data_access_key' => 'data',
     ],
 
 
@@ -38,10 +37,8 @@ return [
             |--------------------------------------------------------------------------
             | response_type
             |--------------------------------------------------------------------------
-            |
-            | This value is used to access to the data you want extract from api.
-            | for example if the data is in response[data][user] 
-            | the data_access_key would be data.user
+            | The type of response.
+            | currently suported types are: json
             |
             | default is json
             */
@@ -49,17 +46,19 @@ return [
 
             /*
             |--------------------------------------------------------------------------
-            | data_access_key
+            | data_access_keys
             |--------------------------------------------------------------------------
             |
-            | This value is used to access to the data you want to extract from api.
+            | This value is used to access to the client-related-data.
             | Use dot notation format for multidimensional array.
-            | e.g. if the data is in response[data][user] 
-            | the data_access_key would be data.user
+            | e.g. if the user-related-data is in response[data][user] 
+            | then data_access_keys[user] would be data.user
             |
-            | default is data
+            | default is client-name
             */
-            'data_access_key' => 'data'
+            'data_access_keys' => [
+                'user' => 'user'
+            ]
         ]
     ],
 

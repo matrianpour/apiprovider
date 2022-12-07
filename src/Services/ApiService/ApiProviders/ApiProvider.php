@@ -9,6 +9,7 @@ abstract class ApiProvider
 {
     private array $configs;
     protected string $url;
+    protected array $dataBody;
 
     public function __construct()
     {
@@ -42,7 +43,8 @@ abstract class ApiProvider
         $configs = config('apiservice.apis.'.$apiName);
         $defaults = config('apiservice.defaults');
         $configs['response_type'] = $configs['response_type'] ?? ($defaults['response_type'] ?? 'json');
-        $configs['data_access_key'] = $configs['data_access_key'] ?? ($defaults['data_access_key'] ?? '');
+        $configs['wrapper_key'] = $configs['wrapper_key'] ?? ($defaults['wrapper_key'] ?? 'data');
+        $configs['data_access_keys'] = $configs['data_access_keys'] ?? [];
         $configs['api_name'] = $apiName;
         $this->configs = $configs;
         $this->url = $configs['url'];
@@ -79,7 +81,6 @@ abstract class ApiProvider
         switch ($responseType) {
             case 'json':
                 $dataBody = $this->extraxtDataFromJson($data->body());
-                $extractedData = $this->extraxtDataFromJson($data->body());
                 break;
             
             // case 'xml':
@@ -115,15 +116,6 @@ abstract class ApiProvider
             );
 
         $dataArray = json_decode($data, true);
-        
-        //data_access_key is client-related
-        //googleApiProvider  has a key-access for user and a key for news
-        //now if this provider is called from user, use key to user and the same for news
-        //i think its better to move this part to decorator layer,
-        //where we have access to provider and client
-        $dataAccessKey = $this->getConfig('data_access_key') ?? $this->getConfig('defaults.data_access_key');
-        if($dataAccessKey !== '')
-            $dataArray = Arr::get($dataArray, $dataAccessKey);
 
         return $dataArray;
     }
