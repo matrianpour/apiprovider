@@ -62,4 +62,16 @@ return [
             'data_access_key' => 'data'
         ]
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | path_to_decorators
+    |--------------------------------------------------------------------------
+    |
+    | This value is used to access to decorators.
+    |
+    */
+    'path_to_decorators' => 'Mtrn\\ApiService\\Services\\ApiService\\Decorators\\',
+    'path_to_apiproviders' =>  'Mtrn\ApiService\\Services\\ApiService\\ApiProviders\\'
+
 ];

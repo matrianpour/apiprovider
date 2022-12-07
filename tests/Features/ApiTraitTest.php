@@ -15,48 +15,14 @@ class ApiTraitTest extends TestCase
     public function request_from_api()
     {
         //arrange
-        $apiTrait = new Client(); //Client that use HasApiGetter
+        $client = new Client(); //Client that use HasApiGetter
 
         //act
-        $response = $apiTrait->requestFromApi($apiName = 'google',$map=false);
+        $response = $client->requestFromApi($apiName = 'google',$map=false);
 
         //assert
         $this->assertInstanceOf('Illuminate\Http\Client\Response', $response);
         $this->assertSame(true,$response->successful());
-    }
-
-    /**
-     * @test
-     * @return void
-     */
-    public function extract_data_from_json_api_response()
-    {
-        //arrange
-        $configs = [
-            'url' => 'https://google.com/api/users/3',
-            'response_type' => 'json',
-            'data_access_key' => 'data.user'
-        ];
-
-        config(['apiservice.apis.google'=> $configs]);
-
-        $client = new Client();
-
-        // stub a json response for api
-        Http::fake([
-            $configs['url'] => Http::response([
-                'data' => [
-                    'user' => ['first_name' => 'john'],
-                ]
-            ], 200)
-        ]);
-
-        //act
-        $client->requestFromApi($amiName='google', $map=false);
-        $extractedData = $client->getApiBody();
-
-        //assert
-        $this->assertSame(['first_name' => 'john'], $extractedData);
     }
 
     /**
@@ -158,46 +124,6 @@ class ApiTraitTest extends TestCase
         $this->assertSame(['name' => 'john doe'], $mappedDataObject->getMappedArray());
         
     }
-
-    /**
-     * @test
-     * @return void
-     */
-    public function set_provider_for_trait()
-    {
-        //arrange
-        $configs = [
-            'url' => 'https://google.com/api/users/3',
-            'response_type' => 'json',
-            'data_access_key' => ''
-        ];
-
-        config(['apiservice.apis.google'=> $configs]);
-
-        $client = new Client();
-        
-        Http::fake([
-            // stub a json response for google api
-            $configs['url'] => Http::response(['first_name' => 'john'], 200),
-
-        ]);
-
-        
-        //act
-        $client->requestFromApi($apiName='google', $map=false);
-        $apiProviderOfClient = $client->getProvider();
-        $providerName = $apiProviderOfClient->getConfig('api_name');
-        $providerConfigs = $apiProviderOfClient->getConfig();
-
-        //assert
-        $this->assertInstanceOf('Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider', $apiProviderOfClient);
-        $this->assertSame('google', $providerName);
-        foreach ($configs as $key => $value) {
-            $this->assertArrayHasKey($key, $providerConfigs);
-            $this->assertSame($value, $providerConfigs[$key]);
-        }
-    }
-
 
     /**
      * @test

@@ -79,6 +79,7 @@ abstract class ApiProvider
         switch ($responseType) {
             case 'json':
                 $dataBody = $this->extraxtDataFromJson($data->body());
+                $extractedData = $this->extraxtDataFromJson($data->body());
                 break;
             
             // case 'xml':
@@ -114,7 +115,12 @@ abstract class ApiProvider
             );
 
         $dataArray = json_decode($data, true);
-    
+        
+        //data_access_key is client-related
+        //googleApiProvider  has a key-access for user and a key for news
+        //now if this provider is called from user, use key to user and the same for news
+        //i think its better to move this part to decorator layer,
+        //where we have access to provider and client
         $dataAccessKey = $this->getConfig('data_access_key') ?? $this->getConfig('defaults.data_access_key');
         if($dataAccessKey !== '')
             $dataArray = Arr::get($dataArray, $dataAccessKey);
