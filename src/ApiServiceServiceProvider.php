@@ -84,5 +84,13 @@ class ApiServiceServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Models/Client.php' => app_path('Models/Client.php'),
         ]);
+        $this->publishes([
+            __DIR__.config('apiservice.path_to_apiproviders').'/GoogleApiProvider.php' 
+            => app_path('Services/Apiservice/ApiProviders/GoogleApiProvider.php'),
+        ]);
+        $this->publishes([
+            __DIR__.config('apiservice.path_to_decorators').'/GoogleClientDecorator.php' 
+            => app_path('Services/Apiservice/Decorators/GoogleClientDecorator.php'),
+        ]);
     }
 }
