@@ -3,9 +3,9 @@ namespace Mtrn\ApiService\Tests;
 
 use Mtrn\ApiService\ApiServiceServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
+use Orchestra\Testbench\TestCase as Orchestra;
 
-
-class TestCase extends TestbenchTestCase
+class TestCase extends Orchestra
 {
     
     public function setUp(): void

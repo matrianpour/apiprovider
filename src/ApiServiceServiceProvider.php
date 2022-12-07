@@ -80,9 +80,9 @@ class ApiServiceServiceProvider extends ServiceProvider
             __DIR__.'/../config/apiservice.php' => config_path('apiservice.php'),
         ], 'apiservice.config');
 
-        // Publishing the configuration file.
+        // Publishing example files.
         $this->publishes([
-            __DIR__.'/../config/apiservice.php' => config_path('apiservice.php'),
-        ], 'apiservice.config');
+            __DIR__.'/Models/Client.php' => app_path('Models/Client.php'),
+        ]);
     }
 }
