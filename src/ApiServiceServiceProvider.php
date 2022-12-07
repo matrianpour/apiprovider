@@ -85,13 +85,13 @@ class ApiServiceServiceProvider extends ServiceProvider
             __DIR__.'/Models/Client.php' => app_path('Models/Client.php'),
         ]);
         $this->publishes([
-
-            __DIR__.'/Services/Apiservice/ApiProviders/GoogleApiProvider.php' 
-            => app_path('Services/Apiservice/ApiProviders/GoogleApiProvider.php'),
+            __DIR__.'/Services/ApiService/ApiProviders/GoogleApiProvider.php' 
+            => app_path('Services/ApiService/ApiProviders/GoogleApiProvider'),
         ]);
         $this->publishes([
-            __DIR__.'/Services/Apiservice/Decorators//GoogleClientDecorator.php' 
-            => app_path('Services/Apiservice/Decorators/GoogleClientDecorator.php'),
+            
+            __DIR__.'/Services/ApiService/Decorators/GoogleClientDecorator.php' 
+            => app_path('Services/ApiService/Decorators/GoogleClientDecorator.php'),
         ]);
     }
 }
