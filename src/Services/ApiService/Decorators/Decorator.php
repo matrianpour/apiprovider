@@ -3,19 +3,18 @@ namespace Mtrn\ApiService\Services\ApiService\Decorators;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider;
-// use Mtrn\ApiService\Traits\IsApiClient AS Client;
-use Mtrn\ApiService\Models\Client;
+// use Mtrn\ApiService\Traits\IsApiClient;
+// use Mtrn\ApiService\Models\Client;
 
 abstract class Decorator
 {
-    protected Client $client;
+    protected object $client;
     public ApiProvider $provider;
     public array $configs;
 
     /**
-     * @param Client $client
+     * @param object $client
      * @param ApiProvider $provider
      */
     public function __construct($client, $provider)
@@ -27,9 +26,9 @@ abstract class Decorator
 
     /**
      * @param array $data
-     * @return Client
+     * @return object
      */
-    abstract public function mapApiData(array $data):Client;
+    abstract public function mapApiData(array $data):object;
 
     /**
     * @return void
@@ -69,9 +68,9 @@ abstract class Decorator
     }
 
     /**
-     * @return Client
+     * @return object
      */
-    public function getMappedApiData(): Client
+    public function getMappedApiData(): object
     {
         $clientRelatedData = $this->getClientRelatedDataFromDataApiBody();
         return $this->mapApiData($clientRelatedData);
@@ -86,9 +85,9 @@ abstract class Decorator
     }
 
     /**
-     * @return Client
+     * @return object
      */
-    public function getClient(): Client
+    public function getClient(): object
     {
         return $this->client;
     }

@@ -1,15 +1,13 @@
 <?php 
 namespace Mtrn\ApiService\Services\ApiService\Decorators;
 
-use Mtrn\ApiService\Models\Client;
-
 class GithubClientDecorator extends Decorator
 {
     /**
      * @param array $data
-     * @return Client
+     * @return object
      */
-    public function mapApiData(array $data): Client
+    public function mapApiData(array $data): object
     {
         // ['forename' => 'sergey', 'surname' => 'lazarev']
         $this->client->setAttribute('name', $data['forename'].' '.$data['surname']);

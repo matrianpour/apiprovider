@@ -5,7 +5,7 @@ namespace Mtrn\ApiService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider;
-use Mtrn\ApiService\Services\ApiService\Mappers\Mapper;
+use Mtrn\ApiService\Services\ApiService\Decorators\Decorator;
 
 class ApiServiceServiceProvider extends ServiceProvider
 {
@@ -43,15 +43,17 @@ class ApiServiceServiceProvider extends ServiceProvider
             return $app->make($pathToProvider);
         });
 
+        
 
-        $this->app->bind(Mapper::class, function ($app, $params) {
-            
-            $apiName = $params['apiName'];
+        $this->app->bind(Decorator::class, function($app, $params) {
+            $apiName = $params['api_name'];
+            $clientName = $params['client_name'];
+            $provider = $params['provider'];
             $client = $params['client'];
-            $clientName = class_basename($client);
-            $mapperName = Str::studly($apiName).$clientName.'Mapper';
-            $pathToMapper = "Mtrn\\ApiService\\Services\\ApiService\\Mappers\\".$mapperName;
-            return  new $pathToMapper($client);
+
+            $decoratorName = Str::studly($apiName).Str::studly($clientName).'Decorator';
+            $decorator = config('apiservice.path_to_decorators').$decoratorName;
+            return new $decorator($client, $provider);
         });
 
     }
