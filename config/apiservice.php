@@ -54,10 +54,10 @@ return [
             | e.g. if the user-related-data is in response[data][user] 
             | then data_access_keys[user] would be data.user
             |
-            | default is client-name
+            | default would be the name of the client
             */
             'data_access_keys' => [
-                'user' => 'user'
+                'client' => 'data'
             ]
         ]
     ],
