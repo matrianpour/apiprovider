@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace Mtrn\ApiService\Traits;
 
 use Illuminate\Support\Facades\App;
@@ -24,6 +25,4 @@ trait HasApiProvider
     {
         return $this->provider;
     }
-
-
 }

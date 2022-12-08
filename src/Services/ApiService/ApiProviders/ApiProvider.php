@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace Mtrn\ApiService\Services\ApiService\ApiProviders;
 
 use Illuminate\Http\Client\Response;
@@ -15,12 +16,11 @@ abstract class ApiProvider
     {
         $this->setConfig();
     }
-    
+
     /**
      * @return Response
      */
     abstract public function requestFromApi(): Response;
-
 
     /**
      * @return Response
@@ -34,8 +34,8 @@ abstract class ApiProvider
     }
 
     /**
-    * @return void
-    */
+     * @return void
+     */
     private function setConfig(): void
     {
         $apiName = $this->getApiName();
@@ -53,11 +53,12 @@ abstract class ApiProvider
     /**
      * @return mixed
      */
-    public function getConfig($key=null): mixed
+    public function getConfig($key = null): mixed
     {
-        if( $key === null )
+        if ($key === null) {
             return $this->configs;
-        
+        }
+
         return Arr::get($this->configs, $key);
     }
 
@@ -69,9 +70,9 @@ abstract class ApiProvider
         return Str::snake(Str::remove('ApiProvider', class_basename($this)));
     }
 
-
     /**
      * @param Response $data
+     *
      * @return void
      */
     private function setData(Response $data): void
@@ -82,7 +83,7 @@ abstract class ApiProvider
             case 'json':
                 $dataBody = $this->extraxtDataFromJson($data->body());
                 break;
-            
+
             // case 'xml':
             //     $dataBody = $this->extraxtDataFromXml($data->body());
             //     break;
@@ -93,7 +94,8 @@ abstract class ApiProvider
     }
 
     /**
-     * return the data of response
+     * return the data of response.
+     *
      * @return array
      */
     public function getData(): array
@@ -101,24 +103,23 @@ abstract class ApiProvider
         return $this->dataBody;
     }
 
-        
     /**
      * @param string $data
+     *
      * @return array $dataArray
      */
     private function extraxtDataFromJson($data): array
     {
-        if(!Str::of($data)->isJson())
+        if (!Str::of($data)->isJson()) {
             throw new \Exception(
                 __METHOD__.
                 ': Resoonse data type is expected to be json '
-               . gettype($data).' is given.'
+               .gettype($data).' is given.'
             );
+        }
 
         $dataArray = json_decode($data, true);
 
         return $dataArray;
     }
- 
-
 }

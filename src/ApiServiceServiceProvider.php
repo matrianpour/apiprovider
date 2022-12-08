@@ -16,7 +16,6 @@ class ApiServiceServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         // Publishing is only necessary when using the CLI.
@@ -36,19 +35,18 @@ class ApiServiceServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('apiservice', function ($app) {
-            return new ApiService;
+            return new ApiService();
         });
-        
+
         $this->app->bind(ApiProvider::class, function ($app, $params) {
             $apiName = $params['apiName'];
             $providerName = Str::studly($apiName).'ApiProvider';
-            $pathToProvider = "Mtrn\\ApiService\\Services\\ApiService\\ApiProviders\\".$providerName;
+            $pathToProvider = 'Mtrn\\ApiService\\Services\\ApiService\\ApiProviders\\'.$providerName;
+
             return $app->make($pathToProvider);
         });
 
-        
-
-        $this->app->bind(Decorator::class, function($app, $params) {
+        $this->app->bind(Decorator::class, function ($app, $params) {
             $apiName = $params['api_name'];
             $clientName = $params['client_name'];
             $provider = $params['provider'];
@@ -56,9 +54,9 @@ class ApiServiceServiceProvider extends ServiceProvider
 
             $decoratorName = Str::studly($apiName).Str::studly($clientName).'Decorator';
             $decorator = config('apiservice.path_to_decorators').$decoratorName;
+
             return new $decorator($client, $provider);
         });
-
     }
 
     /**
@@ -88,13 +86,11 @@ class ApiServiceServiceProvider extends ServiceProvider
             __DIR__.'/Models/Client.php' => app_path('Models/Client.php'),
         ]);
         $this->publishes([
-            __DIR__.'/Services/ApiService/ApiProviders/GoogleApiProvider.php' 
-            => app_path('Services/ApiService/ApiProviders/GoogleApiProvider'),
+            __DIR__.'/Services/ApiService/ApiProviders/GoogleApiProvider.php' => app_path('Services/ApiService/ApiProviders/GoogleApiProvider'),
         ]);
         $this->publishes([
-            
-            __DIR__.'/Services/ApiService/Decorators/GoogleClientDecorator.php' 
-            => app_path('Services/ApiService/Decorators/GoogleClientDecorator.php'),
+
+            __DIR__.'/Services/ApiService/Decorators/GoogleClientDecorator.php' => app_path('Services/ApiService/Decorators/GoogleClientDecorator.php'),
         ]);
     }
 }
