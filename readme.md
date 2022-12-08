@@ -85,9 +85,9 @@ $ composer require mtrn/apiservice
 
 ## Usage
 
-lets take a look at the provided example.
+lets take a look at the provided example.  
 
->> GoogleApiProvider
+> GoogleApiProvider
     
     use Mtrn\ApiService\Services\ApiService\ApiProviders\ApiProvider;
 
@@ -100,7 +100,7 @@ lets take a look at the provided example.
     }
 
 
->> Client 
+> Client 
 
     use Mtrn\ApiService\Traits\IsApiClient;
 
@@ -114,7 +114,7 @@ lets take a look at the provided example.
         }
     }
 
->> Decorator 
+> Decorator 
 
     use Mtrn\ApiService\Services\ApiService\Decorators\Decorator;
 
@@ -134,23 +134,23 @@ lets take a look at the provided example.
     }
 
 
->> request to google and get response object:
+> request to google and get response object:
 
     $client = new Client();
     $response = $client->requestFromApi($apiname='google', $map=false);
 
->> request to google and get extracted data
+> request to google and get extracted data
 
     $client = new Client();
     $client->requestFromApi($amiName='google', $map=false);
     $extractedData = $client->getApiBody();
 
->> request to google and get mapped data object
+> request to google and get mapped data object
 
     $client = new Client();
     $mappedData = $client->requestFromApi($apiname='google', $map=true);
 
->> request to google and get mapped array
+> request to google and get mapped array
 
     $client = new Client();
     $client->requestFromApi('google', true);
