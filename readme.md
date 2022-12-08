@@ -156,35 +156,6 @@ lets take a look at the provided example.
     $client->requestFromApi('google', true);
     $mappedArray = $client->getMappedArray();
 
-
-
-## Change log
-
-Please see the [changelog](changelog.md) for more information on what has changed recently.
-
-## Testing
-
-``` bash
-$ composer test
-```
-
-## Contributing
-
-Please see [contributing.md](contributing.md) for details and a todolist.
-
-## Security
-
-If you discover any security related issues, please email author@email.com instead of using the issue tracker.
-
-## Credits
-
-- [Author Name][link-author]
-- [All Contributors][link-contributors]
-
-## License
-
-MIT. Please see the [license file](license.md) for more information.
-
 [ico-version]: https://img.shields.io/packagist/v/mtrn/apiservice.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/mtrn/apiservice.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/mtrn/apiservice/master.svg?style=flat-square
