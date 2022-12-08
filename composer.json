@@ -1,7 +1,7 @@
 {
     "name": "mtrn/apiservice",
     "description": "api service: get api response and map it into any object of your choice.",
-    "license": "",
+    "license": "MIT",
     "authors": [
         {
             "name": "Zeynab Matrian",
