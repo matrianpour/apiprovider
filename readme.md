@@ -1,9 +1,9 @@
 # ApiService
 
-[![Latest Version on Packagist][ico-version]][https://img.shields.io/packagist/v/mtrn/apiservice.svg?style=flat-square]
-[![Total Downloads][ico-downloads]][https://img.shields.io/packagist/dt/mtrn/apiservice.svg?style=flat-square]
-[![Build Status][ico-travis]][https://img.shields.io/travis/mtrn/apiservice/master.svg?style=flat-square]
-[![StyleCI][ico-styleci]][https://styleci.io/repos/12345678/shield]
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Total Downloads][ico-downloads]][link-downloads]
+[![Build Status][ico-travis]][link-travis]
+[![StyleCI][ico-styleci]][link-styleci]
 
 This package pdrovides an api-service to ease working with different apis.
 It maps api-responses to objects of your choice by using a trait named IsApiClient. In this way you are free to define different clients for a single api. You'r also able to use diffrent apis for a single client.
