@@ -26,43 +26,46 @@ let's get a look at structur:
 ## Configs
 
 The package's config-file is apiservice.php. Its options are: 
-# apis: 
+### apis: 
 This is an associative array where keys are the name of apis and values are array of     configs for the api. Each api has three attributes: 
 > url: the api's url
+>
 > response_type: the type of api response (currently supported type is json)
-> data_access_keys: it is an associative array where a key is client-name and its value is access-key to the client-related-data. 
+>
+> data_access_keys: it is an associative array where a key is client-name and its value is access-key to the client-related-data.
+
 * default access-key would be the name of the client; like 'user' => 'user'.
 * 'user' => '' indicates that the whole response-body is related to the client user.
 
-# defaults: 
+### defaults: 
 this option controls the default. You're free to change them as you want. Its only value it response_type which is json.
 
-# path_to_decorators: 
+### path_to_decorators: 
 This value is used to access decorators.
 
-# path_to_apiproviders:
+### path_to_apiproviders:
 This value is used to access to api-providers.
 
 
 ## Client.php
 
-This is an example client object which get use of trait [IsApiClient.php](isApiClient).
+This is an example client object which get use of trait <b IsApiClient.php >.
 It must implement function getMappedArray() to present its data in array format.
 
 ## ApiProviders
 
 All your api-provider classes should be placed in this directory.
 An api-provider is used to handle api related functionalities; like sending a request to the api, or choosing a way to extract data from response based on its type.
-For each of your api you should create an api-provider and name in as ApinameApiProvider.
+For each of your api you should create an api-provider and name in as <b> ApinameApiProvider </b>.
 GoogleApiProvider.php is an example of api-provider.
-# Note: 
+### Note: 
 > They must extend ApiProvider abstract and implement method requestFromApi().
 
 ## Decorators
 
 All your decorator classes should be placed in this directory.
 A decorator is used to decorate your clients. The nameing format is ApinameClientnameDecorator.
-# Note:
+### Note:
 > They must extend Decorator abstract and implement method mapApiData();
 
 
